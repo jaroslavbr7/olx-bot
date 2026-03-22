@@ -55,7 +55,7 @@ async function sendToTelegram(ad) {
 // 🔍 Парсинг OLX
 async function checkOLX() {
     try {
-        const url = 'https://m.olx.ua/uk/nedvizhimost/kvartiry/dolgosrochnaya-arenda-kvartir/kharkov/?currency=UAH&page=3&search%5Border%5D=created_at%3Adesc';
+        const url = 'https://m.olx.ua/uk/nedvizhimost/kvartiry/dolgosrochnaya-arenda-kvartir/kharkov/*';
 
         const { data } = await axios.get(url, {
             headers: {
