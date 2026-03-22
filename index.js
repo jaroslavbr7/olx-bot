@@ -10,6 +10,7 @@ const targetPrice = 10000;
 const maxPercentDiff = 0.9;
 
 const keywords = ['квартира', '2к']
+const excludeKeywords = ['сутки', '1к']
 
 const seenAds = new Set();
 
