@@ -20,7 +20,7 @@ let seenAds = new Set();
 function loadSeenAds() {
     try {
         const data = fs.readFileSync('seen.json', 'utf-8');
-        const arr = JSON.parse(data);
+        arr = JSON.parse(data);
         seenAds = new Set(arr);
     } catch (e) {
         seenAds = new Set();
