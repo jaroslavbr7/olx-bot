@@ -1,0 +1,106 @@
+const axios = require('axios');
+const cheerio = require('cheerio');
+
+// 🔐 ВСТАВЬ СЮДА
+const BOT_TOKEN = '8678831509:AAFQ_V0Nlrpz_LLYfFnAwhU1QdsKBO0bmYM';
+const CHAT_ID = '-1003881895429';
+
+// 🎯 Настройки
+const targetPrice = 10000;
+const maxPercentDiff = 0.9;
+
+const keywords = ['квартира', '2к']
+
+const seenAds = new Set();
+
+// 🔧 Парсинг цены
+function parsePrice(text) {
+    if (!text) return 0;
+    return parseInt(text.replace(/\s/g, '').replace(/[^\d]/g, ''), 10) || 0;
+}
+
+// 🔍 Фильтр
+function isValidAd(title, price) {
+    const lower = title.toLowerCase();
+
+    const hasKeyword = keywords.some(k => lower.includes(k));
+    const hasExclude = excludeKeywords.some(k => lower.includes(k));
+
+    const diff = Math.abs(price - targetPrice);
+    const threshold = targetPrice * maxPercentDiff;
+
+    return hasKeyword && !hasExclude && diff <= threshold;
+}
+
+// 📤 Telegram
+async function sendToTelegram(ad) {
+    try {
+        await axios.post(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+            chat_id: CHAT_ID,
+            text: `🔥 Новое объявление!
+
+📦 ${ad.title}
+💰 ${ad.price} грн
+
+🔗 ${ad.link}`
+        });
+
+        console.log('✅ Отправлено:', ad.title);
+    } catch (err) {
+        console.error('❌ Ошибка Telegram:', err.message);
+    }
+}
+
+// 🔍 Парсинг OLX
+async function checkOLX() {
+    try {
+        const url = 'https://www.olx.ua/uk/nedvizhimost/kvartiry/';
+
+        const { data } = await axios.get(url, {
+            headers: {
+                'User-Agent': 'Mozilla/5.0'
+            }
+        });
+
+        const $ = cheerio.load(data);
+
+        $('[data-cy="l-card"]').each((i, el) => {
+            const title = $(el).find('[data-cy="listing-ad-title"]').text().trim();
+            const priceText = $(el).find('[data-testid="ad-price"]').text().trim();
+            const link = $(el).find('a').attr('href');
+
+            const price = parsePrice(priceText);
+
+            if (!link || seenAds.has(link)) return;
+            seenAds.add(link);
+
+            if (isValidAd(title, price)) {
+                sendToTelegram({ title, price, link });
+            }
+        });
+
+    } catch (err) {
+        console.error('❌ Ошибка парсинга:', err.message);
+    }
+}
+
+// 🔁 Рандомный интервал
+function getRandomDelay() {
+    return Math.floor(Math.random() * (90000 - 60000 + 1)) + 60000;
+}
+
+// 🚀 Запуск цикла
+async function start() {
+    while (true) {
+        console.log('🔍 Проверка OLX...');
+
+        await checkOLX();
+
+        const delay = getRandomDelay();
+        console.log(`⏳ Ждём ${Math.round(delay / 1000)} сек`);
+
+        await new Promise(r => setTimeout(r, delay));
+    }
+}
+
+start();
