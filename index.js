@@ -9,8 +9,8 @@ const CHAT_ID = '-1003881895429';
 const targetPrice = 10000;
 const maxPercentDiff = 0.9;
 
-const keywords = ['квартира', '2к']
-const excludeKeywords = ['сутки', '1к']
+const keywords = ['квартира', '2к'];
+const excludeKeywords = ["сутки", "1к"];
 
 const seenAds = new Set();
 
