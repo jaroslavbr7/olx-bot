@@ -94,7 +94,6 @@ async function processQueue() {
 
     isSending = false;
 }
-}
 
 // 🔍 Парсинг OLX
 loadSeenAds()
