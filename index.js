@@ -1,6 +1,8 @@
 const fs = require('fs');
 const axios = require('axios');
 const cheerio = require('cheerio');
+let messageQueue = [];
+let isSending = false;
 
 // 🔐 ВСТАВЬ СЮДА
 const BOT_TOKEN = process.env.BOT_TOKEN;
@@ -56,22 +58,42 @@ function isValidAd(title, price) {
 }
 
 // 📤 Telegram
-async function sendToTelegram(ad) {
-    try {
-        await axios.post(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-            chat_id: CHAT_ID,
-            text: `🔥 Новое объявление!
+function sendToTelegram(ad) {
+    messageQueue.push(ad);
+    processQueue();
+}
+
+async function processQueue() {
+    if (isSending) return;
+
+    isSending = true;
+
+    while (messageQueue.length > 0) {
+        const ad = messageQueue.shift();
+
+        try {
+            await axios.post(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                chat_id: CHAT_ID,
+                text: `🔥 Новое объявление!
 
 📦 ${ad.title}
 💰 ${ad.price} грн
 
 🔗 ${ad.link}`
-        });
+            });
 
-        console.log('✅ Отправлено:', ad.title);
-    } catch (err) {
-        console.error('❌ Ошибка Telegram:', err.message);
+            console.log('✅ Отправлено:', ad.title);
+
+        } catch (err) {
+            console.error('❌ Ошибка Telegram:', err.message);
+        }
+
+        // ⏳ ЗАДЕРЖКА (очень важно)
+        await new Promise(r => setTimeout(r, 1500));
     }
+
+    isSending = false;
+}
 }
 
 // 🔍 Парсинг OLX
