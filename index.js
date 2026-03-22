@@ -58,24 +58,31 @@ async function checkOLX() {
         const url = 'https://www.olx.ua/uk/nedvizhimost/kvartiry/dolgosrochnaya-arenda-kvartir/kharkov/';
 
         const { data } = await axios.get(url, {
-            headers: {
-                'User-Agent': 'Mozilla/5.0'
-            }
-        });
+    headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
+        'Accept-Language': 'ru-RU,ru;q=0.9'
+    }
+});
 
         const $ = cheerio.load(data);
+        console.log('Найдено объявлений:', $('[data-cy="l-card"]').length);
 
         $('[data-cy="l-card"]').each((i, el) => {
             const title = $(el).find('[data-cy="listing-ad-title"]').text().trim();
             const priceText = $(el).find('[data-testid="ad-price"]').text().trim();
-            const link = $(el).find('a').attr('href');
+            let link = $(el).find('a').attr('href');
+
+            if (link && !link.startsWith('http')) {
+            link = 'https://www.olx.ua' + link;
+}
 
             const price = parsePrice(priceText);
+            console.log('🔎 Проверка:', title, price);
 
             if (!link || seenAds.has(link)) return;
             seenAds.add(link);
 
-            if (isValidAd(title, price)) {
+            if (isValidAd(title, price)) { console.log('✅ ПОДХОДИТ:', title, price);
                 sendToTelegram({ title, price, link });
             }
         });
