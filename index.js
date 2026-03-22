@@ -17,7 +17,14 @@ const seenAds = new Set();
 // 🔧 Парсинг цены
 function parsePrice(text) {
     if (!text) return 0;
-    return parseInt(text.replace(/\s/g, '').replace(/[^\d]/g, ''), 10) || 0;
+
+    const match = text
+        .replace(/\s/g, '')
+        .match(/\d+/g);
+
+    if (!match) return 0;
+
+    return parseInt(match[0], 10);
 }
 
 // 🔍 Фильтр
@@ -68,7 +75,15 @@ async function checkOLX() {
         console.log('Найдено объявлений:', $('[data-cy="l-card"]').length);
 
         $('[data-cy="l-card"]').each((i, el) => {
-            const title = $(el).find('[data-cy="listing-ad-title"]').text().trim();
+            let title = $(el).find('[data-cy="listing-ad-title"]').text().trim();
+
+if (!title) {
+    title = $(el).find('h6').text().trim();
+}
+
+if (!title) {
+    title = $(el).find('a').text().trim();
+}
             const priceText = $(el).find('[data-testid="ad-price"]').text().trim();
             let link = $(el).find('a').attr('href');
 
