@@ -75,7 +75,19 @@ async function checkOLX() {
         console.log('Найдено объявлений:', $('[data-cy="l-card"]').length);
 
         $('[data-cy="l-card"]').each((i, el) => {
-            let title = $(el).find('[data-cy="listing-ad-title"]').text().trim();
+            let title = $(el)
+    .find('h6')
+    .clone()
+    .children()
+    .remove()
+    .end()
+    .text()
+    .trim();
+            title = title.replace(/\s+/g, ' ').trim();
+            if (title.includes('{') || title.includes('.css')) {
+    console.log('❌ Мусорный title, пропуск');
+    return;
+            }
 
 if (!title) {
     title = $(el).find('h6').text().trim();
