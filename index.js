@@ -2,8 +2,8 @@ const axios = require('axios');
 const cheerio = require('cheerio');
 
 // 🔐 ВСТАВЬ СЮДА
-const BOT_TOKEN = '8678831509:AAFQ_V0Nlrpz_LLYfFnAwhU1QdsKBO0bmYM';
-const CHAT_ID = '-1003881895429';
+const BOT_TOKEN = process.env.BOT_TOKEN;
+const CHAT_ID = process.env.CHAT_ID;
 
 // 🎯 Настройки
 const targetPrice = 10000;
