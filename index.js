@@ -9,11 +9,11 @@ const BOT_TOKEN = process.env.BOT_TOKEN;
 const CHAT_ID = process.env.CHAT_ID;
 
 // 🎯 Настройки
-const targetPrice = 10000;
-const maxPercentDiff = 0.5;
+const targetPrice = 12000;
+const maxPercentDiff = 0.3;
 
 const keywords = ["сдам", "квартиру", "2к", "2-к", "кв", "двухкомнатную", "двухкомнатная", "3к", "3-к", "трёхкомнатную", "трёхкомнатная", "евроремонт", "харьков", "Харків", "здам", "грн"];
-const excludeKeywords = ["сутки", "1к", "гараж", "гостинка"];
+const excludeKeywords = ["сутки", "1к", "гараж", "гостинка", "салтовка", "салтівка", "героїв праці", "героев труда", "студенческая", "студентська",];
 
 let seenAds = new Set();
 
