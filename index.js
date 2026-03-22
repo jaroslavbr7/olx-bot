@@ -1,3 +1,4 @@
+const fs = require('fs');
 const axios = require('axios');
 const cheerio = require('cheerio');
 
@@ -13,6 +14,21 @@ const keywords = ["сдам", "квартиру", "2к", "2-к", "кв", "дву
 const excludeKeywords = ["сутки", "1к", "гараж", "гостинка"];
 
 const seenAds = new Set();
+let seenAds = new Set();
+
+function loadSeenAds() {
+    try {
+        const data = fs.readFileSync('seen.json', 'utf-8');
+        const arr = JSON.parse(data);
+        seenAds = new Set(arr);
+    } catch (e) {
+        seenAds = new Set();
+    }
+}
+
+function saveSeenAds() {
+    fs.writeFileSync('seen.json', JSON.stringify([...seenAds]));
+}
 
 // 🔧 Парсинг цены
 function parsePrice(text) {
@@ -107,7 +123,9 @@ if (!title) {
             console.log('🔎 Проверка:', title, price);
 
             if (!link || seenAds.has(link)) return;
-            seenAds.add(link);
+
+seenAds.add(link);
+saveSeenAds();
 
             if (isValidAd(title, price)) { console.log('✅ ПОДХОДИТ:', title, price);
                 sendToTelegram({ title, price, link });
@@ -138,4 +156,5 @@ async function start() {
     }
 }
 
+loadSeenAds();
 start();
