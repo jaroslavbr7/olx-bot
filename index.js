@@ -129,9 +129,6 @@ for (const el of cards) {
     if (id > lastMaxId) {
         lastMaxId = id;
     }
-        catch (err) {
-        console.error('❌ Ошибка парсинга:', err.message);
-    }
 }
 
 
