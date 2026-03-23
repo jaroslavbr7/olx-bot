@@ -186,6 +186,8 @@ async function start() {
     await checkOLX(true);
     console.log('✅ После первого checkOLX');
 
+    await new Promise(r => setTimeout(r, 3000));
+
     while (true) {
         console.log('🔍 Проверка OLX...');
         
