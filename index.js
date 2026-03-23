@@ -2,8 +2,6 @@ console.log('🔥 НОВАЯ ВЕРСИЯ КОДА');
 const fs = require('fs');
 const axios = require('axios');
 const cheerio = require('cheerio');
-let messageQueue = [];
-let isSending = false;
 
 // 🔐 ВСТАВЬ СЮДА
 const BOT_TOKEN = process.env.BOT_TOKEN;
@@ -59,22 +57,7 @@ function isValidAd(title, price) {
 }
 
 // 📤 Telegram
-function sendToTelegram(ad) {
-    messageQueue.push(ad);
-    processQueue();
-}
 
-async function processQueue() {
-    if (isSending) return;
-
-    isSending = true;
-
-    while (messageQueue.length > 0) {
-        const ad = messageQueue.shift();
-
-        try {
-            await axios.post(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-                chat_id: CHAT_ID,
                 text: `🔥 Новое объявление!
 
 📦 ${ad.title}
@@ -83,11 +66,16 @@ async function processQueue() {
 🔗 ${ad.link}`
             });
 
+            if (!res.data.ok) {
+            console.error('❌ Telegram error:', res.data);
+        } else {
             console.log('✅ Отправлено:', ad.title);
-
-        } catch (err) {
-            console.error('❌ Ошибка Telegram:', err.message);
         }
+
+    } catch (err) {
+        console.error('❌ Telegram:', err.response?.data || err.message);
+    }
+}
 
         // ⏳ ЗАДЕРЖКА (очень важно)
         await new Promise(r => setTimeout(r, 1500));
@@ -157,7 +145,7 @@ if (!title) {
     saveSeenAds();
 
     if (!isFirstRun) {
-        sendToTelegram({ title, price, link });
+        await sendToTelegram({ title, price, link });
     }
     }
 }
