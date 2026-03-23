@@ -15,22 +15,6 @@ const maxPercentDiff = 0.3;
 const keywords = ["сдам", "квартиру", "2к", "2-к", "кв", "двухкомнатную", "двухкомнатная", "3к", "3-к", "трёхкомнатную", "трёхкомнатная", "евроремонт", "харьков", "Харків", "здам", "грн"];
 const excludeKeywords = ["сутки", "1к", "гараж", "гостинка", "салтовка", "салтівка", "героїв праці", "героев труда", "студенческая", "студентська",];
 
-let seenAds = new Set();
-
-function loadSeenAds() {
-    try {
-        const data = fs.readFileSync('seen.json', 'utf-8');
-        arr = JSON.parse(data);
-        seenAds = new Set(arr);
-    } catch (e) {
-        seenAds = new Set();
-    }
-}
-
-function saveSeenAds() {
-    fs.writeFileSync('seen.json', JSON.stringify([...seenAds]));
-}
-
 // 🔧 Парсинг цены
 function parsePrice(text) {
     if (!text) return 0;
@@ -140,14 +124,10 @@ const id = extractId(link);
             if (link && !link.startsWith('http')) {
             link = 'https://www.olx.ua' + link;
 }
-            if (seenAds.has(link)) {
-    continue;
-            }
     
             const price = parsePrice(priceText);
             console.log('🔎 Проверка:', title, price);
-
-            if (!link || seenAds.has(link)) continue;
+    
     if (isValidAd(title, price)) {
 
         if (!isFirstRun) {
