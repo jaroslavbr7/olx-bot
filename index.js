@@ -63,8 +63,7 @@ function isValidAd(title, price) {
 📦 ${ad.title}
 💰 ${ad.price} грн
 
-🔗 ${ad.link}`
-            );
+🔗 ${ad.link}`;
 
             if (!res.data.ok) {
             console.error('❌ Telegram error:', res.data);
