@@ -113,7 +113,7 @@ for (const el of cards) {
     const id = extractId(link);
 
     if (id <= lastMaxId && lastMaxId !== 0) {
-        continue;
+        break;
     }
 
     const price = parsePrice(priceText);
