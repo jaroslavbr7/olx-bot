@@ -77,12 +77,6 @@ async function sendToTelegram(ad) {
         console.error('❌ Telegram:', err.response?.data || err.message);
     }
 }
-        // ⏳ ЗАДЕРЖКА (очень важно)
-        await new Promise(r => setTimeout(r, 1500));
-    }
-
-    isSending = false;
-}
 
 // 🔍 Парсинг OLX
 loadSeenAds();
