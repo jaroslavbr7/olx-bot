@@ -112,7 +112,7 @@ async function checkOLX(isFirstRun = false) {
         const $ = cheerio.load(data);
         console.log('Найдено объявлений:', $('[data-cy="l-card"]').length);
 
-        const cards = $('[data-cy="l-card"]').toArray();
+        const cards = $('[data-cy="l-card"]').toArray().slice(0, 5);
 
 for (const el of cards) {
             let title = $(el)
@@ -126,7 +126,7 @@ for (const el of cards) {
             title = title.replace(/\s+/g, ' ').trim();
             if (title.includes('{') || title.includes('.css')) {
     console.log('❌ Мусорный title, пропуск');
-    return;
+    continue;
             }
 
 if (!title) {
@@ -142,29 +142,24 @@ if (!title) {
             if (link && !link.startsWith('http')) {
             link = 'https://www.olx.ua' + link;
 }
-
+            if (seenAds.has(link)) {
+    break;
+            }
+    
             const price = parsePrice(priceText);
             console.log('🔎 Проверка:', title, price);
 
-            if (!link || seenAds.has(link)) return;
+            if (!link || seenAds.has(link)) continue;
+    if (isValidAd(title, price)) {
+    console.log('✅ ПОДХОДИТ:', title, price);
 
-seenAds.add(link);
-saveSeenAds();
-
-            if (isValidAd(title, price)) { console.log('✅ ПОДХОДИТ:', title, price);
-
-    if (isFirstRun) {
     seenAds.add(link);
-} else {
-    seenAds.add(link);
-    sendToTelegram({ title, price, link });
+    saveSeenAds();
+
+    if (!isFirstRun) {
+        sendToTelegram({ title, price, link });
     }
-
-    seenAds.add(link);
-    sendToTelegram({ title, price, link });
-            }
-        }
-
+    }
     } catch (err) {
         console.error('❌ Ошибка парсинга:', err.message);
     }
