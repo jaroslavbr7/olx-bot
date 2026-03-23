@@ -87,6 +87,8 @@ async function checkOLX(isFirstRun = false) {
 
 for (const el of cards) {
 
+    console.log('👉 Зашёл в цикл');
+
     let title = $(el)
         .find('h6')
         .clone()
@@ -95,10 +97,10 @@ for (const el of cards) {
         .end()
         .text()
         .trim();
+    
+    console.log('📦 RAW TITLE:', title);
 
     title = title.replace(/\s+/g, ' ').trim();
-
-    if (title.includes('{') || title.includes('.css')) continue;
 
     const priceText = $(el).find('[data-testid="ad-price"]').text().trim();
 
@@ -111,9 +113,11 @@ for (const el of cards) {
 
     const id = extractId(link);
 
-    if (id <= lastMaxId && lastMaxId !== 0) {
-        continue;
-    }
+    console.log('🆔 ID:', id, 'lastMaxId:', lastMaxId);
+
+    // if (id <= lastMaxId && lastMaxId !== 0) {
+       //  continue;
+   // }
 
     const price = parsePrice(priceText);
 
