@@ -167,7 +167,7 @@ saveSeenAds();
 
     } catch (err) {
         console.error('❌ Ошибка парсинга:', err.message);
-
+    }
 }
 
 
