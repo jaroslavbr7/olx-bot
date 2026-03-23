@@ -86,15 +86,6 @@ async function checkOLX(isFirstRun = false) {
 
         const cards = $('[data-cy="l-card"]').toArray().slice(0, 10);
 
-        if (cards.length > 0) {
-    const firstLink = $(cards[0]).find('a').attr('href');
-    if (firstLink) {
-        const firstId = extractId(firstLink);
-        
-        if (firstId > lastMaxId) lastMaxId = firstId;
-    }
-        }
-
 for (const el of cards) {
 
     let title = $(el)
