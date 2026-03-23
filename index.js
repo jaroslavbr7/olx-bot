@@ -94,7 +94,7 @@ async function checkOLX(isFirstRun = false) {
         const $ = cheerio.load(data);
         console.log('Найдено объявлений:', $('[data-cy="l-card"]').length);
 
-        const cards = $('[data-cy="l-card"]').toArray().slice(0, 5);
+        const cards = $('[data-cy="l-card"]').toArray().slice(0, 30);
 
 for (const el of cards) {
             let title = $(el)
@@ -125,7 +125,7 @@ if (!title) {
             link = 'https://www.olx.ua' + link;
 }
             if (seenAds.has(link)) {
-    break;
+    continue;
             }
     
             const price = parsePrice(priceText);
@@ -151,7 +151,7 @@ if (!title) {
 
 // 🔁 Рандомный интервал
 function getRandomDelay() {
-    return Math.floor(Math.random() * (90000 - 60000 + 1)) + 60000;
+    return Math.floor(Math.random() * (30000 - 15000 + 1)) + 15000;
 }
 
 // 🚀 Запуск цикла
