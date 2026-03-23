@@ -87,56 +87,49 @@ async function checkOLX(isFirstRun = false) {
         const cards = $('[data-cy="l-card"]').toArray().slice(0, 10);
 
 for (const el of cards) {
-            let title = $(el)
-    .find('h6')
-    .clone()
-    .children()
-    .remove()
-    .end()
-    .text()
-    .trim();
-            title = title.replace(/\s+/g, ' ').trim();
-            if (title.includes('{') || title.includes('.css')) {
-    console.log('❌ Мусорный title, пропуск');
-    continue;
-            }
 
-if (!title) {
-    title = $(el).find('h6').text().trim();
-}
+    let title = $(el)
+        .find('h6')
+        .clone()
+        .children()
+        .remove()
+        .end()
+        .text()
+        .trim();
 
-if (!title) {
-    title = $(el).find('a').text().trim();
-}
-            const priceText = $(el).find('[data-testid="ad-price"]').text().trim();
-            let link = $(el).find('a').attr('href');
+    title = title.replace(/\s+/g, ' ').trim();
+
+    if (title.includes('{') || title.includes('.css')) continue;
+
+    const priceText = $(el).find('[data-testid="ad-price"]').text().trim();
+
+    let link = $(el).find('a').attr('href');
     if (link && !link.startsWith('http')) {
-    link = 'https://www.olx.ua' + link;
-}
+        link = 'https://www.olx.ua' + link;
+    }
 
-if (!link) continue;
+    if (!link) continue;
 
-const id = extractId(link);
+    const id = extractId(link);
+
     if (id <= lastMaxId) {
-    break;
+        break;
     }
-}
-    
-            const price = parsePrice(priceText);
-            console.log('🔎 Проверка:', title, price);
-    
+
+    const price = parsePrice(priceText);
+
+    console.log('🔎 Проверка:', title, price);
+
     if (isValidAd(title, price)) {
-
-    if (!isFirstRun) {
-        sendToTelegram({ title, price, link });
+        if (!isFirstRun) {
+            sendToTelegram({ title, price, link });
+        }
     }
-}
 
-// 👇 ВСЕГДА ОБНОВЛЯЕМ
-if (id > lastMaxId) {
-    lastMaxId = id;
-}
-    } catch (err) {
+    if (id > lastMaxId) {
+        lastMaxId = id;
+    }
+        catch (err) {
         console.error('❌ Ошибка парсинга:', err.message);
     }
 }
