@@ -1,3 +1,4 @@
+console.log('🔥 НОВАЯ ВЕРСИЯ КОДА');
 const fs = require('fs');
 const axios = require('axios');
 const cheerio = require('cheerio');
