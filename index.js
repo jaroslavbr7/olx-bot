@@ -108,9 +108,9 @@ for (const el of cards) {
 
     console.log('🆔 ID:', id, 'lastMaxId:', lastMaxId);
 
-    // if (id <= lastMaxId && lastMaxId !== 0) {
-       //  continue;
-   // }
+    if (id <= lastMaxId && lastMaxId !== 0) {
+       continue;
+   }
 
     const price = parsePrice(priceText);
 
