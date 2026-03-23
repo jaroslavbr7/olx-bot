@@ -97,7 +97,7 @@ async function processQueue() {
 
 // 🔍 Парсинг OLX
 loadSeenAds()
-async function checkOLX() {
+async function checkOLX(isFirstRun = false) {
     try {
         const url = 'https://www.olx.ua/uk/nedvizhimost/kvartiry/dolgosrochnaya-arenda-kvartir/kharkov/';
 
@@ -149,7 +149,14 @@ seenAds.add(link);
 saveSeenAds();
 
             if (isValidAd(title, price)) { console.log('✅ ПОДХОДИТ:', title, price);
-                sendToTelegram({ title, price, link });
+
+    if (isFirstRun) {
+        seenAds.add(link);
+        return;
+    }
+
+    seenAds.add(link);
+    sendToTelegram({ title, price, link });
             }
         });
 
@@ -165,6 +172,8 @@ function getRandomDelay() {
 
 // 🚀 Запуск цикла
 async function start() {
+    console.log('📥 Первый запуск — запоминаем объявления');
+await checkOLX(true);
     while (true) {
         console.log('🔍 Проверка OLX...');
         
