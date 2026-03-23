@@ -152,8 +152,10 @@ saveSeenAds();
             if (isValidAd(title, price)) { console.log('✅ ПОДХОДИТ:', title, price);
 
     if (isFirstRun) {
-        seenAds.add(link);
-        return;
+    seenAds.add(link);
+} else {
+    seenAds.add(link);
+    sendToTelegram({ title, price, link });
     }
 
     seenAds.add(link);
@@ -173,8 +175,12 @@ function getRandomDelay() {
 
 // 🚀 Запуск цикла
 async function start() {
-    console.log('📥 Первый запуск — запоминаем объявления');
-await checkOLX(true);
+    console.log('🚀 START ЗАПУСТИЛСЯ');
+
+    console.log('📥 Перед первым checkOLX');
+    await checkOLX(true);
+    console.log('✅ После первого checkOLX');
+
     while (true) {
         console.log('🔍 Проверка OLX...');
         
