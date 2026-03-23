@@ -83,7 +83,7 @@ async function checkOLX(isFirstRun = false) {
         const $ = cheerio.load(data);
         console.log('Найдено объявлений:', $('[data-cy="l-card"]').length);
 
-        const cards = $('[data-cy="l-card"]').toArray().slice(0, 10);
+        const cards = $('[data-cy="l-card"]').toArray().slice(0, 25);
 
 for (const el of cards) {
 
