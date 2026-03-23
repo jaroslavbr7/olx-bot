@@ -53,7 +53,7 @@ function saveLastId() {
     }
 }
 
-// Filter
+// Filters
 function isValidAd(title, price) {
     const lower = title.toLowerCase();
 
@@ -143,7 +143,7 @@ for (const el of cards) {
     if (isValidAd(title, price)) {
         if (!isFirstRun) {
             console.log('📤 ОТПРАВКА:', title);
-            sendToTelegram({ title, price, link });
+            await sendToTelegram({ title, price, link });
         }
     }
 
