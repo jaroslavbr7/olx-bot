@@ -187,3 +187,4 @@ await checkOLX(true);
 }
 
 start();
+console.log('🚀 ФАЙЛ ЗАПУЩЕН');
