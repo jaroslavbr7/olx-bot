@@ -66,7 +66,7 @@ async function sendToTelegram(ad) {
 📦 ${ad.title}
 💰 ${ad.price} грн
 🔗 ${ad.link}`
-
+        });
             if (!res.data.ok) {
             console.error('❌ Telegram error:', res.data);
         } else {
