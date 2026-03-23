@@ -67,12 +67,13 @@ async function sendToTelegram(ad) {
 💰 ${ad.price} грн
 🔗 ${ad.link}`
         });
-            if (!res.data.ok) {
+
+        if (!res.data.ok) {
             console.error('❌ Telegram error:', res.data);
         } else {
             console.log('✅ Отправлено:', ad.title);
         }
-       catch (err) {
+    } catch (err) {
         console.error('❌ Telegram:', err.response?.data || err.message);
     }
 }
@@ -84,7 +85,7 @@ async function sendToTelegram(ad) {
 }
 
 // 🔍 Парсинг OLX
-loadSeenAds()
+loadSeenAds();
 async function checkOLX(isFirstRun = false) {
     try {
         const url = 'https://www.olx.ua/uk/nedvizhimost/kvartiry/dolgosrochnaya-arenda-kvartir/kharkov/';
