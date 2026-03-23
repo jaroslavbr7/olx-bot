@@ -76,7 +76,6 @@ async function sendToTelegram(ad) {
        catch (err) {
         console.error('❌ Telegram:', err.response?.data || err.message);
     }
-}
 
         // ⏳ ЗАДЕРЖКА (очень важно)
         await new Promise(r => setTimeout(r, 1500));
