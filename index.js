@@ -139,6 +139,10 @@ for (const el of cards) {
         lastMaxId = id;
     }
 }
+        } catch (err) {
+        console.error('❌ Ошибка парсинга:', err.message);
+    }
+}
 
 
 // 🔁 Рандомный интервал
