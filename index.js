@@ -144,7 +144,7 @@ if (!title) {
     seenAds.add(link);
     saveSeenAds();
 
-    if (!isFirstRun) {
+    if (!isFirstRun) { console.log('📤 Пытаюсь отправить:', link);
         await sendToTelegram({ title, price, link });
     }
     }
