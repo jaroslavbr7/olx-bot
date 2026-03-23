@@ -2,6 +2,7 @@ console.log('🔥 НОВАЯ ВЕРСИЯ КОДА');
 const fs = require('fs');
 const axios = require('axios');
 const cheerio = require('cheerio');
+let lastMaxId = 0;
 
 // 🔐 ВСТАВЬ СЮДА
 const BOT_TOKEN = process.env.BOT_TOKEN;
@@ -42,6 +43,12 @@ function parsePrice(text) {
 
     return parseInt(match[0], 10);
 }
+function extractId(link) {
+    const match = link.match(/ID([a-zA-Z0-9]+)/);
+    if (!match) return 0;
+
+    return parseInt(match[1], 36);
+}
 
 // 🔍 Фильтр
 function isValidAd(title, price) {
@@ -79,7 +86,6 @@ async function sendToTelegram(ad) {
 }
 
 // 🔍 Парсинг OLX
-loadSeenAds();
 async function checkOLX(isFirstRun = false) {
     try {
         const url = 'https://www.olx.ua/uk/nedvizhimost/kvartiry/dolgosrochnaya-arenda-kvartir/kharkov/';
@@ -94,7 +100,7 @@ async function checkOLX(isFirstRun = false) {
         const $ = cheerio.load(data);
         console.log('Найдено объявлений:', $('[data-cy="l-card"]').length);
 
-        const cards = $('[data-cy="l-card"]').toArray().slice(0, 30);
+        const cards = $('[data-cy="l-card"]').toArray().slice(0, 10);
 
 for (const el of cards) {
             let title = $(el)
@@ -120,6 +126,16 @@ if (!title) {
 }
             const priceText = $(el).find('[data-testid="ad-price"]').text().trim();
             let link = $(el).find('a').attr('href');
+    if (link && !link.startsWith('http')) {
+    link = 'https://www.olx.ua' + link;
+}
+
+if (!link) continue;
+
+const id = extractId(link);
+    if (id <= lastMaxId) {
+    break;
+    }
 
             if (link && !link.startsWith('http')) {
             link = 'https://www.olx.ua' + link;
@@ -133,10 +149,24 @@ if (!title) {
 
             if (!link || seenAds.has(link)) continue;
     if (isValidAd(title, price)) {
-    console.log('✅ ПОДХОДИТ:', title, price);
 
-    seenAds.add(link);
-    saveSeenAds();
+        if (!isFirstRun) {
+            sendToTelegram({ title, price, link });
+    }
+
+    if (id > lastMaxId) {
+        lastMaxId = id;
+    }
+    }
+
+    if (!isFirstRun) {
+        sendToTelegram({ title, price, link });
+    }
+
+    if (id > lastMaxId) {
+        lastMaxId = id;
+    }
+    }
 
     if (!isFirstRun) { console.log('📤 Пытаюсь отправить:', link);
         await sendToTelegram({ title, price, link });
