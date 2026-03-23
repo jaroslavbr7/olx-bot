@@ -112,7 +112,9 @@ async function checkOLX(isFirstRun = false) {
         const $ = cheerio.load(data);
         console.log('Найдено объявлений:', $('[data-cy="l-card"]').length);
 
-        $('[data-cy="l-card"]').each((i, el) => {
+        const cards = $('[data-cy="l-card"]').toArray();
+
+for (const el of cards) {
             let title = $(el)
     .find('h6')
     .clone()
@@ -161,7 +163,7 @@ saveSeenAds();
     seenAds.add(link);
     sendToTelegram({ title, price, link });
             }
-        });
+        }
 
     } catch (err) {
         console.error('❌ Ошибка парсинга:', err.message);
