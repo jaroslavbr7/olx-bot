@@ -167,7 +167,10 @@ saveSeenAds();
 
     } catch (err) {
         console.error('❌ Ошибка парсинга:', err.message);
+    } catch (err) {
+        console.error('❌ Ошибка в checkOLX:', err.message);
     }
+}
 }
 
 // 🔁 Рандомный интервал
