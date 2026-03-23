@@ -89,14 +89,7 @@ for (const el of cards) {
 
     console.log('👉 Зашёл в цикл');
 
-    let title = $(el)
-        .find('h6')
-        .clone()
-        .children()
-        .remove()
-        .end()
-        .text()
-        .trim();
+    let title = $(el).find('a').text().trim();
     
     console.log('📦 RAW TITLE:', title);
 
