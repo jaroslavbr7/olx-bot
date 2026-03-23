@@ -57,8 +57,11 @@ function isValidAd(title, price) {
 }
 
 // 📤 Telegram
-
-                text: `🔥 Новое объявление!
+async function sendToTelegram(ad) {
+    try {
+        const res = await axios.post(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+            chat_id: CHAT_ID,
+             text: `🔥 Новое объявление!
 
 📦 ${ad.title}
 💰 ${ad.price} грн
