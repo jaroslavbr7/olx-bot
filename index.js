@@ -70,6 +70,7 @@ function isValidAd(title, price) {
         } else {
             console.log('✅ Отправлено:', ad.title);
         }
+}
        catch (err) {
         console.error('❌ Telegram:', err.response?.data || err.message);
     }
