@@ -113,7 +113,7 @@ for (const el of cards) {
     const id = extractId(link);
 
     if (id <= lastMaxId && lastMaxId !== 0) {
-        break;
+        continue;
     }
 
     const price = parsePrice(priceText);
@@ -122,6 +122,7 @@ for (const el of cards) {
 
     if (isValidAd(title, price)) {
         if (!isFirstRun) {
+            console.log('📤 ОТПРАВКА:', title);
             sendToTelegram({ title, price, link });
         }
     }
