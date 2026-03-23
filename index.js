@@ -129,14 +129,6 @@ const id = extractId(link);
             console.log('🔎 Проверка:', title, price);
     
     if (isValidAd(title, price)) {
-
-        if (!isFirstRun) {
-            sendToTelegram({ title, price, link });
-    }
-
-    if (id > lastMaxId) {
-        lastMaxId = id;
-    }
     }
 
     if (!isFirstRun) {
@@ -146,13 +138,6 @@ const id = extractId(link);
     if (id > lastMaxId) {
         lastMaxId = id;
     }
-    }
-
-    if (!isFirstRun) { console.log('📤 Пытаюсь отправить:', link);
-        await sendToTelegram({ title, price, link });
-    }
-    }
-}
     } catch (err) {
         console.error('❌ Ошибка парсинга:', err.message);
     }
