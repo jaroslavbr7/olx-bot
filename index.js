@@ -160,6 +160,7 @@ if (!title) {
         sendToTelegram({ title, price, link });
     }
     }
+}
     } catch (err) {
         console.error('❌ Ошибка парсинга:', err.message);
     }
