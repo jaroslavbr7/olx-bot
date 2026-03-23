@@ -1,21 +1,20 @@
-console.log('🔥 НОВАЯ ВЕРСИЯ КОДА');
 const fs = require('fs');
 const axios = require('axios');
 const cheerio = require('cheerio');
 let lastMaxId = 0;
 
-// 🔐 ВСТАВЬ СЮДА
+// Telegram API
 const BOT_TOKEN = process.env.BOT_TOKEN;
 const CHAT_ID = process.env.CHAT_ID;
 
-// 🎯 Настройки
+// Settings
 const targetPrice = 12000;
 const maxPercentDiff = 0.3;
 
 const keywords = ["сдам", "квартиру", "2к", "2-к", "кв", "двухкомнатную", "двухкомнатная", "3к", "3-к", "трёхкомнатную", "трёхкомнатная", "евроремонт", "харьков", "Харків", "здам", "грн"];
 const excludeKeywords = ["сутки", "1к", "гараж", "гостинка", "салтовка", "салтівка", "героїв праці", "героев труда", "студенческая", "студентська",];
 
-// 🔧 Парсинг цены
+// Price parsing
 function parsePrice(text) {
     if (!text) return 0;
 
@@ -34,7 +33,7 @@ function extractId(link) {
     return parseInt(match[1], 36);
 }
 
-// 🔍 Фильтр
+// Filter
 function isValidAd(title, price) {
     const lower = title.toLowerCase();
 
@@ -47,7 +46,7 @@ function isValidAd(title, price) {
     return hasKeyword && !hasExclude && diff <= threshold;
 }
 
-// 📤 Telegram
+// Telegram message
 async function sendToTelegram(ad) {
     try {
         const res = await axios.post(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
@@ -69,7 +68,7 @@ async function sendToTelegram(ad) {
     }
 }
 
-// 🔍 Парсинг OLX
+// Site parsing
 async function checkOLX(isFirstRun = false) {
     try {
         const url = 'https://www.olx.ua/uk/nedvizhimost/kvartiry/dolgosrochnaya-arenda-kvartir/kharkov/';
@@ -137,12 +136,12 @@ for (const el of cards) {
 }
 
 
-// 🔁 Рандомный интервал
+// Random interval
 function getRandomDelay() {
     return Math.floor(Math.random() * (30000 - 15000 + 1)) + 15000;
 }
 
-// 🚀 Запуск цикла
+// Cycle start
 async function start() {
     console.log('🚀 START ЗАПУСТИЛСЯ');
 
