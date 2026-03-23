@@ -32,6 +32,26 @@ function extractId(link) {
 
     return parseInt(match[1], 36);
 }
+function loadLastId() {
+    try {
+        if (fs.existsSync('lastId.json')) {
+            const data = JSON.parse(fs.readFileSync('lastId.json', 'utf-8'));
+            lastMaxId = data.lastMaxId || 0;
+            console.log('📂 Загружен lastMaxId:', lastMaxId);
+        }
+    } catch (err) {
+        console.error('❌ Ошибка загрузки ID:', err.message);
+    }
+}
+
+function saveLastId() {
+    try {
+        fs.writeFileSync('lastId.json', JSON.stringify({ lastMaxId }));
+        console.log('💾 Сохранён lastMaxId:', lastMaxId);
+    } catch (err) {
+        console.error('❌ Ошибка сохранения ID:', err.message);
+    }
+}
 
 // Filter
 function isValidAd(title, price) {
@@ -125,6 +145,7 @@ for (const el of cards) {
 
     if (id > lastMaxId) {
         lastMaxId = id;
+        saveLastId();
     }
 }
         } catch (err) {
@@ -141,6 +162,8 @@ function getRandomDelay() {
 // Cycle start
 async function start() {
     console.log('🚀 START ЗАПУСТИЛСЯ');
+
+    loadLastId();
 
     console.log('📥 Перед первым checkOLX');
     await checkOLX(true);
