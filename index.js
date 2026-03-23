@@ -120,24 +120,22 @@ const id = extractId(link);
     if (id <= lastMaxId) {
     break;
     }
-
-            if (link && !link.startsWith('http')) {
-            link = 'https://www.olx.ua' + link;
 }
     
             const price = parsePrice(priceText);
             console.log('🔎 Проверка:', title, price);
     
     if (isValidAd(title, price)) {
-    }
 
     if (!isFirstRun) {
         sendToTelegram({ title, price, link });
     }
+}
 
-    if (id > lastMaxId) {
-        lastMaxId = id;
-    }
+// 👇 ВСЕГДА ОБНОВЛЯЕМ
+if (id > lastMaxId) {
+    lastMaxId = id;
+}
     } catch (err) {
         console.error('❌ Ошибка парсинга:', err.message);
     }
