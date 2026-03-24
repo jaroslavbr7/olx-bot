@@ -99,7 +99,7 @@ async function sendToTelegram(ad) {
 // Site parsing
 async function checkOLX(isFirstRun = false) {
     try {
-        const url = 'https://www.olx.ua/uk/nedvizhimost/kvartiry/dolgosrochnaya-arenda-kvartir/kharkov/';
+        const url = 'https://www.olx.ua/uk/nedvizhimost/kvartiry/dolgosrochnaya-arenda-kvartir/kharkov/?search[order]=created_at:desc';
 
         const { data } = await axios.get(url, {
     headers: {
