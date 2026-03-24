@@ -1,7 +1,7 @@
 const fs = require('fs');
 const axios = require('axios');
 const cheerio = require('cheerio');
-let lastMaxId = 0;
+let seenLinks = new Set(0)
 
 // Telegram API
 const BOT_TOKEN = process.env.BOT_TOKEN;
@@ -31,17 +31,26 @@ function extractId(link) {
     if (!match) return 0;
 
     return parseInt(match[1], 36);
-}
-function loadLastId() {
+
+    function loadSeen() {
     try {
-        if (fs.existsSync('lastId.json')) {
-            const data = JSON.parse(fs.readFileSync('lastId.json', 'utf-8'));
-            lastMaxId = data.lastMaxId || 0;
-            console.log('📂 Загружен lastMaxId:', lastMaxId);
+        if (fs.existsSync('seen.json')) {
+            const data = JSON.parse(fs.readFileSync('seen.json'));
+            seenLinks = new Set(data);
+            console.log('📂 Загружено объявлений:', seenLinks.size);
         }
-    } catch (err) {
-        console.error('❌ Ошибка загрузки ID:', err.message);
+    } catch (e) {
+        console.log('❌ Ошибка загрузки seen');
     }
+}
+
+function saveSeen() {
+    try {
+        fs.writeFileSync('seen.json', JSON.stringify([...seenLinks]));
+    } catch (e) {
+        console.log('❌ Ошибка сохранения seen');
+    }
+}
 }
 
 function saveLastId() {
@@ -108,6 +117,7 @@ async function checkOLX(isFirstRun = false) {
 
 for (const el of cards) {
 
+
     if (checked > 50) break;
     checked++;
 
@@ -128,13 +138,9 @@ for (const el of cards) {
 
     if (!link) continue;
 
-    const id = extractId(link);
-
-    console.log('🆔 ID:', id, 'lastMaxId:', lastMaxId);
-
-    if (id <= lastMaxId && lastMaxId !== 0) {
-       continue;
-   }
+    if (seenLinks.has(link)) {
+    continue;
+    }
 
     const price = parsePrice(priceText);
 
@@ -142,15 +148,16 @@ for (const el of cards) {
 
     if (isValidAd(title, price)) {
         if (!isFirstRun) {
+    seenLinks.add(link);
+    continue;
+        }
             console.log('📤 ОТПРАВКА:', title);
             await sendToTelegram({ title, price, link });
+        seenLinks.add(link);
+saveSeen();
         }
     }
 
-    if (id > lastMaxId) {
-        lastMaxId = id;
-        saveLastId();
-    }
 }
         } catch (err) {
         console.error('❌ Ошибка парсинга:', err.message);
@@ -167,7 +174,7 @@ function getRandomDelay() {
 async function start() {
     console.log('🚀 START ЗАПУСТИЛСЯ');
 
-    loadLastId();
+    loadSeen();
 
     console.log('📥 Перед первым checkOLX');
     await checkOLX(true);
