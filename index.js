@@ -31,8 +31,8 @@ function extractId(link) {
     if (!match) return 0;
 
     return parseInt(match[1], 36);
-
-    function loadSeen() {
+}
+function loadSeen() {
     try {
         if (fs.existsSync('seen.json')) {
             const data = JSON.parse(fs.readFileSync('seen.json'));
@@ -50,7 +50,6 @@ function saveSeen() {
     } catch (e) {
         console.log('❌ Ошибка сохранения seen');
     }
-}
 }
 
 function saveLastId() {
