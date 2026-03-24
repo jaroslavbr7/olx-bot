@@ -126,6 +126,7 @@ for (const el of cards) {
     const priceText = $(el).find('[data-testid="ad-price"]').text().trim();
 
     let link = $(el).find('a').attr('href');
+    link = link.split('?')[0];
     if (link && !link.startsWith('http')) {
         link = 'https://www.olx.ua' + link;
     }
