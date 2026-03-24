@@ -111,15 +111,10 @@ async function checkOLX(isFirstRun = false) {
         const $ = cheerio.load(data);
         console.log('Найдено объявлений:', $('[data-cy="l-card"]').length);
 
-        const cards = $('[data-cy="l-card"]').toArray()
-        let checked = 0;
+        const cards = $('[data-cy="l-card"]').toArray().slice(0,15)
 
 for (const el of cards) {
-
-
-    if (checked > 50) break;
-    checked++;
-
+    
     console.log('👉 Зашёл в цикл');
 
     let title = $(el).find('a').text().trim();
