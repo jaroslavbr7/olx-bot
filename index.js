@@ -158,12 +158,10 @@ saveSeen();
         }
     }
 
-}
-        } catch (err) {
+} catch (err) {
         console.error('❌ Ошибка парсинга:', err.message);
     }
 }
-
 
 // Random interval
 function getRandomDelay() {
