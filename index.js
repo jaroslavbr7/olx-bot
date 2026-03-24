@@ -1,7 +1,7 @@
 const fs = require('fs');
 const axios = require('axios');
 const cheerio = require('cheerio');
-let seenLinks = new Set(0)
+let seenLinks = new Set()
 
 // Telegram API
 const BOT_TOKEN = process.env.BOT_TOKEN;
