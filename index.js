@@ -142,6 +142,9 @@ for (const el of cards) {
     console.log('🔎 Проверка:', title, price);
 
     if (isValidAd(title, price)) {
+
+        console.log('👉 VALIDATE:', title, price);
+        
         if (!isFirstRun) {
     seenLinks.add(link);
     continue;
