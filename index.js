@@ -164,7 +164,6 @@ for (const el of cards) {
             console.log('📤 ОТПРАВКА:', title);
             await sendToTelegram({ title, price, link });
     }
-}
         seenLinks.add(link);
 saveSeen();
         }
