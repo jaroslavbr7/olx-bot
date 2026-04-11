@@ -158,11 +158,12 @@ for (const el of cards) {
     seenLinks.add(link);
     continue;
         }
+        } else {
+    console.log('❌ НЕ ПРОШЕЛ:', title);
+    }
             console.log('📤 ОТПРАВКА:', title);
             await sendToTelegram({ title, price, link });
     }
-    } else {
-    console.log('❌ НЕ ПРОШЕЛ:', title);
 }
         seenLinks.add(link);
 saveSeen();
