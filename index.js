@@ -134,6 +134,7 @@ for (const el of cards) {
     if (!link) continue;
 
     if (seenLinks.has(link)) {
+        console.log('⏭ ПРОПУСК (seen):', link);
     continue;
     }
 
@@ -142,6 +143,14 @@ for (const el of cards) {
     console.log('🔎 Проверка:', title, price);
 
     if (isValidAd(title, price)) {
+        console.log('✅ ПРОШЕЛ ФИЛЬТР:', title);
+
+        for (const word of excludeKeywords) {
+    if (title.toLowerCase().includes(word)) {
+        console.log('⛔ exclude слово:', word);
+        return false;
+    }
+        }
 
         console.log('👉 VALIDATE:', title, price);
         
@@ -151,6 +160,10 @@ for (const el of cards) {
         }
             console.log('📤 ОТПРАВКА:', title);
             await sendToTelegram({ title, price, link });
+    }
+    } else {
+    console.log('❌ НЕ ПРОШЕЛ:', title);
+}
         seenLinks.add(link);
 saveSeen();
         }
